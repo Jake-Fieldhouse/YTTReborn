@@ -2,7 +2,7 @@
 
 YouTube removed Trending — so we brought it back. A lightweight, zero-dependency web app that pulls live trending data from the **YouTube Data API v3** and displays it in a premium dark-mode interface. No server required.
 
-![YTTReborn Screenshot](https://raw.githubusercontent.com/your-username/YTTReborn/main/screenshot.png)
+![YTTReborn Screenshot](https://raw.githubusercontent.com/Jake-Fieldhouse/YTTReborn/main/screenshot.png)
 
 ---
 
@@ -18,11 +18,29 @@ YouTube removed Trending — so we brought it back. A lightweight, zero-dependen
 
 ### 2. Run YTTReborn
 
-```bash
-git clone https://github.com/your-username/YTTReborn.git && open YTTReborn/index.html
+Because YTTReborn has zero dependencies, you don't need to install Node or any packages. You simply clone the repo and open the file.
+
+Here is the fastest one-liner to get started based on your operating system:
+
+#### Windows
+
+```powershell
+git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; start YTTReborn\index.html
 ```
 
-> **Windows?** Just double-click `index.html` — it opens in your default browser.
+#### macOS
+
+```bash
+git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && open YTTReborn/index.html
+```
+
+#### Linux
+
+```bash
+git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && xdg-open YTTReborn/index.html
+```
+
+*(Alternatively, you can just download the ZIP from GitHub, extract it, and double-click `index.html`)*
 
 ### 3. Paste Your Key
 
@@ -33,7 +51,7 @@ On first launch, YTTReborn will ask for your API key. Paste it in, hit **Start B
 ## Features
 
 | Feature | Description |
-|---------|-------------|
+| ------- | ----------- |
 | **🔥 Trending Feed** | The same algorithmic ranking YouTube's Trending page used — not just "most viewed" |
 | **🌍 Auto Region Detection** | Detects your country via IP and loads local trending automatically |
 | **🗂️ Category Filtering** | Filter by Music, Gaming, Sports, Comedy, Entertainment, and more |
@@ -56,7 +74,7 @@ YouTube gives you **10,000 free API units per day**. Each trending request costs
 
 ## Project Structure
 
-```
+```text
 YTTReborn/
 ├── index.html      # Main page + setup modal
 ├── style.css       # Design system
