@@ -330,9 +330,11 @@
   }
   
   // ─── Hover Preview Feature ───
-  const ytScript = document.createElement('script');
-  ytScript.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(ytScript);
+  if (window.location.protocol !== 'file:') {
+    const ytScript = document.createElement('script');
+    ytScript.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(ytScript);
+  }
 
   let hoverTimer = null;
   let activePlayer = null;
