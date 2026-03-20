@@ -18,11 +18,23 @@ YouTube removed Trending — so we brought it back. A lightweight, zero-dependen
 
 ### 2. Run YTTReborn
 
-Because YTTReborn has zero dependencies, you don't need to install Node or any packages. You simply clone the repo and open the file.
+Because YTTReborn is a static HTML file with zero dependencies, you don't even need Git installed to run it.
 
-Here is the fastest one-liner to get started based on your operating system:
+**Option 1: The truly zero-dependency way (No Git required)**
 
-#### Windows
+1. Go to the top of this GitHub page.
+2. Click the green **`<> Code`** button and select **Download ZIP**.
+3. Extract the folder and double click `index.html`.
+
+*(That's it. It will open directly in your browser).*
+
+---
+
+**Option 2: For Developers (Requires Git)**
+
+If you have Git installed, here are the fastest one-liners to clone and launch immediately:
+
+#### Windows (PowerShell)
 
 ```powershell
 git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; start YTTReborn\index.html
@@ -39,8 +51,6 @@ git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && open YTTReborn/ind
 ```bash
 git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && xdg-open YTTReborn/index.html
 ```
-
-*(Alternatively, you can just download the ZIP from GitHub, extract it, and double-click `index.html`)*
 
 ### 3. Paste Your Key
 
