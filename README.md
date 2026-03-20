@@ -37,19 +37,19 @@ If you have Git installed, here are the fastest one-liners to clone and launch i
 #### Windows (PowerShell)
 
 ```powershell
-cd $env:USERPROFILE\Desktop; git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; start YTTReborn\index.html
+cd $env:USERPROFILE\Desktop; if (Test-Path YTTReborn) { git -C YTTReborn pull } else { git clone https://github.com/Jake-Fieldhouse/YTTReborn.git }; start YTTReborn\index.html
 ```
 
 #### macOS
 
 ```bash
-git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && open YTTReborn/index.html
+cd ~/Desktop && if [ -d "YTTReborn" ]; then git -C YTTReborn pull; else git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; fi && open YTTReborn/index.html
 ```
 
 #### Linux
 
 ```bash
-git clone https://github.com/Jake-Fieldhouse/YTTReborn.git && xdg-open YTTReborn/index.html
+cd ~/Desktop && if [ -d "YTTReborn" ]; then git -C YTTReborn pull; else git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; fi && xdg-open YTTReborn/index.html
 ```
 
 ### 3. Paste Your Key
