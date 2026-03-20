@@ -348,8 +348,12 @@
       
       card.addEventListener('mouseleave', () => {
         clearTimeout(hoverTimer);
-        const iframe = thumbWrap.querySelector('iframe');
-        if (iframe) iframe.remove();
+        // Small debounce to ignore fake mouseleave events triggered by iframe DOM injection
+        setTimeout(() => {
+          if (card.matches(':hover')) return; 
+          const iframe = thumbWrap.querySelector('iframe');
+          if (iframe) iframe.remove();
+        }, 50);
       });
     });
   }

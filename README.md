@@ -2,7 +2,7 @@
 
 YouTube removed Trending — so we brought it back. A lightweight, zero-dependency web app that pulls live trending data from the **YouTube Data API v3** and displays it in a premium dark-mode interface. No server required.
 
-![YTTReborn Screenshot](https://raw.githubusercontent.com/Jake-Fieldhouse/YTTReborn/main/screenshot.png)
+![YTTReborn Screenshot](./screenshot.png)
 
 ---
 
