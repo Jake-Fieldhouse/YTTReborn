@@ -318,15 +318,63 @@ img { display: block; max-width: 100%; }
   object-fit: cover;
   transition: transform 0.4s var(--ease);
 }
-.card-thumb iframe {
+.player-overlay {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  border: none;
-  pointer-events: none;
+  inset: 0;
   z-index: 5;
   background: #000;
   animation: fadeIn 0.4s var(--ease) both;
+}
+
+/* iframe itself must not steal mouse events so overlay handles them */
+.player-overlay iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  border: none;
+  pointer-events: none;
+}
+
+/* Custom Interactive Controls */
+.preview-mute-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto;
+  transition: background 0.2s var(--ease);
+}
+.preview-mute-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.preview-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto;
+  transition: height 0.2s;
+}
+.preview-progress:hover {
+  height: 6px;
+}
+
+.preview-progress-bar {
+  height: 100%;
+  background: #ff0000;
+  width: 0%;
+  transition: width 0.1s linear;
 }
 
 @keyframes fadeIn {

@@ -325,7 +325,17 @@
   }
   
   // ─── Hover Preview Feature ───
+  const ytScript = document.createElement('script');
+  ytScript.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(ytScript);
+
   let hoverTimer = null;
+  let activePlayer = null;
+  let progressInterval = null;
+
+  const ICON_MUTE = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+  const ICON_UNMUTE = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+
   function attachHoverPreviews(container) {
     container.querySelectorAll('.video-card').forEach(card => {
       if (card.dataset.hoverAttached) return;
@@ -335,27 +345,100 @@
       const videoId = card.dataset.videoId;
       
       card.addEventListener('mouseenter', () => {
-        // Wait 800ms before spanning iframe to avoid aggressive loading when scrolling
         hoverTimer = setTimeout(() => {
-          if (thumbWrap.querySelector('iframe')) return;
-          const iframe = document.createElement('iframe');
-          // Autoplay=1 starts it, mute=1 is required for autoplay to work, controls=0 hides UI
-          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1`;
-          iframe.allow = "autoplay; encrypted-media";
-          thumbWrap.appendChild(iframe);
+          if (!window.YT || !window.YT.Player) return;
+          if (thumbWrap.querySelector('.player-overlay')) return;
+
+          destroyActivePlayer();
+
+          const playerWrap = document.createElement('div');
+          playerWrap.className = 'player-overlay';
+          
+          const playerDiv = document.createElement('div');
+          playerWrap.appendChild(playerDiv);
+          
+          const controlsHtml = `
+            <button class="preview-mute-btn" aria-label="Toggle Sound">
+              ${ICON_MUTE}
+            </button>
+            <div class="preview-progress">
+              <div class="preview-progress-bar"></div>
+            </div>
+          `;
+          playerWrap.insertAdjacentHTML('beforeend', controlsHtml);
+          thumbWrap.appendChild(playerWrap);
+          
+          let duration = 0;
+          const progressBar = playerWrap.querySelector('.preview-progress-bar');
+          const muteBtn = playerWrap.querySelector('.preview-mute-btn');
+          const progressContainer = playerWrap.querySelector('.preview-progress');
+          
+          activePlayer = new YT.Player(playerDiv, {
+            videoId: videoId,
+            playerVars: { autoplay: 1, controls: 0, modestbranding: 1, disablekb: 1, fs: 0, playsinline: 1, rel: 0 },
+            events: {
+              onReady: (e) => {
+                e.target.mute();
+                e.target.playVideo();
+                duration = e.target.getDuration();
+                
+                progressInterval = setInterval(() => {
+                  try {
+                    if(e.target.getPlayerState() === YT.PlayerState.PLAYING) {
+                      const curr = e.target.getCurrentTime();
+                      const pct = (curr / duration) * 100;
+                      progressBar.style.width = `${pct}%`;
+                    }
+                  } catch(err) {}
+                }, 100);
+              }
+            }
+          });
+          
+          muteBtn.addEventListener('click', (ev) => {
+            ev.preventDefault(); ev.stopPropagation();
+            if(!activePlayer) return;
+            if(activePlayer.isMuted()) {
+              activePlayer.unMute();
+              muteBtn.innerHTML = ICON_UNMUTE;
+            } else {
+              activePlayer.mute();
+              muteBtn.innerHTML = ICON_MUTE;
+            }
+          });
+          
+          progressContainer.addEventListener('click', (ev) => {
+            ev.preventDefault(); ev.stopPropagation();
+            if(!activePlayer || !duration) return;
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = ev.clientX - rect.left;
+            const pct = clickX / rect.width;
+            activePlayer.seekTo(duration * pct, true);
+          });
+
         }, 800);
       });
       
       card.addEventListener('mouseleave', () => {
         clearTimeout(hoverTimer);
-        // Small debounce to ignore fake mouseleave events triggered by iframe DOM injection
         setTimeout(() => {
           if (card.matches(':hover')) return; 
-          const iframe = thumbWrap.querySelector('iframe');
-          if (iframe) iframe.remove();
+          destroyActivePlayer();
         }, 50);
       });
     });
+  }
+
+  function destroyActivePlayer() {
+    if(activePlayer) {
+      activePlayer.destroy();
+      activePlayer = null;
+    }
+    if(progressInterval) {
+      clearInterval(progressInterval);
+      progressInterval = null;
+    }
+    document.querySelectorAll('.player-overlay').forEach(el => el.remove());
   }
 
   function renderVideos(videos, append = false) {
