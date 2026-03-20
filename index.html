@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="YTTReborn — YouTube Trending, reborn. Browse trending videos across categories and regions, powered by the YouTube Data API v3.">
+  <title>YTTReborn — YouTube Trending, Reborn</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ─── API Key Setup Modal ─── -->
+  <div id="setup-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <defs>
+            <linearGradient id="modal-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff2d55"/>
+              <stop offset="100%" stop-color="#ff6b6b"/>
+            </linearGradient>
+          </defs>
+          <rect width="32" height="32" rx="6" fill="#1a1a2e"/>
+          <path d="M8 22 L14 12 L20 16 L26 6" stroke="url(#modal-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="26" cy="6" r="2.5" fill="#ff2d55"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">Welcome to YTT<span class="logo-accent">Reborn</span></h2>
+      <p class="modal-desc">Enter your YouTube Data API v3 key to get started. Your key is stored locally in your browser — it's never sent anywhere except to Google's API.</p>
+      <div class="modal-input-wrap">
+        <input type="text" id="api-key-input" class="modal-input" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
+        <p id="api-key-error" class="modal-error hidden"></p>
+      </div>
+      <button id="api-key-submit" class="modal-btn">Start Browsing</button>
+      <a href="https://github.com/your-repo/YTTReborn#setup" target="_blank" rel="noopener" class="modal-help">How do I get an API key?</a>
+    </div>
+  </div>
+
+  <!-- ─── Header ─── -->
+  <header id="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo" id="logo">
+        <svg viewBox="0 0 32 32" class="logo-icon" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff2d55"/>
+              <stop offset="100%" stop-color="#ff6b6b"/>
+            </linearGradient>
+          </defs>
+          <rect width="32" height="32" rx="6" fill="#1a1a2e"/>
+          <path d="M8 22 L14 12 L20 16 L26 6" stroke="url(#logo-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="26" cy="6" r="2.5" fill="#ff2d55"/>
+        </svg>
+        <span class="logo-text">YTT<span class="logo-accent">Reborn</span></span>
+      </a>
+      <div class="header-controls">
+        <span class="last-updated" id="last-updated" title="Auto-refreshes every 5 minutes"></span>
+        <div class="region-selector" id="region-selector">
+          <label for="region-select" class="sr-only">Select region</label>
+          <svg class="region-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/>
+          </svg>
+          <select id="region-select">
+            <option value="US">🇺🇸 United States</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="IN">🇮🇳 India</option>
+            <option value="BR">🇧🇷 Brazil</option>
+            <option value="MX">🇲🇽 Mexico</option>
+            <option value="RU">🇷🇺 Russia</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="ZA">🇿🇦 South Africa</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="PH">🇵🇭 Philippines</option>
+          </select>
+        </div>
+        <button id="change-key-btn" class="change-key-btn" title="Change API Key">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Category Bar ─── -->
+  <nav id="category-bar" aria-label="Video categories">
+    <div class="category-track" id="category-track">
+      <button class="cat-pill active" data-category-id="" id="cat-all">All</button>
+    </div>
+  </nav>
+
+  <!-- ─── Main Content ─── -->
+  <main id="main-content">
+    <div id="status-banner" class="status-banner hidden" role="alert"></div>
+
+    <section id="video-grid" class="video-grid" aria-label="Trending videos"></section>
+
+    <div class="load-more-wrap" id="load-more-wrap">
+      <button id="load-more-btn" class="load-more-btn hidden">
+        <span>Load More</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div id="load-spinner" class="load-spinner hidden">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ─── Footer ─── -->
+  <footer id="site-footer">
+    <p>YTTReborn &mdash; Powered by the <a href="https://developers.google.com/youtube/v3" target="_blank" rel="noopener">YouTube Data API v3</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
