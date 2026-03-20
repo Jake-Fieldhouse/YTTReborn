@@ -346,13 +346,23 @@
       
       card.addEventListener('mouseenter', () => {
         hoverTimer = setTimeout(() => {
-          if (!window.YT || !window.YT.Player) return;
           if (thumbWrap.querySelector('.player-overlay')) return;
 
           destroyActivePlayer();
 
           const playerWrap = document.createElement('div');
           playerWrap.className = 'player-overlay';
+          
+          // Graceful Desktop/file:// Fallback
+          // YouTube's JS API breaks on file:// protocol. If YT is undefined, fallback to simple basic iframe.
+          if (!window.YT || !window.YT.Player || window.location.protocol === 'file:') {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1`;
+            iframe.allow = "autoplay; encrypted-media";
+            playerWrap.appendChild(iframe);
+            thumbWrap.appendChild(playerWrap);
+            return;
+          }
           
           const playerDiv = document.createElement('div');
           playerWrap.appendChild(playerDiv);
@@ -373,7 +383,7 @@
           const muteBtn = playerWrap.querySelector('.preview-mute-btn');
           const progressContainer = playerWrap.querySelector('.preview-progress');
           
-          activePlayer = new YT.Player(playerDiv, {
+          activePlayer = new window.YT.Player(playerDiv, {
             videoId: videoId,
             playerVars: { autoplay: 1, controls: 0, modestbranding: 1, disablekb: 1, fs: 0, playsinline: 1, rel: 0 },
             events: {
@@ -384,7 +394,7 @@
                 
                 progressInterval = setInterval(() => {
                   try {
-                    if(e.target.getPlayerState() === YT.PlayerState.PLAYING) {
+                    if(e.target.getPlayerState() === window.YT.PlayerState.PLAYING) {
                       const curr = e.target.getCurrentTime();
                       const pct = (curr / duration) * 100;
                       progressBar.style.width = `${pct}%`;
