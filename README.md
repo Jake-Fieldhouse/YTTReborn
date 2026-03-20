@@ -37,7 +37,7 @@ If you have Git installed, here are the fastest one-liners to clone and launch i
 #### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; start YTTReborn\index.html
+cd $env:USERPROFILE\Desktop; git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; start YTTReborn\index.html
 ```
 
 #### macOS
