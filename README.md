@@ -32,24 +32,24 @@ Because YTTReborn is a static HTML file with zero dependencies, you don't even n
 
 **Option 2: For Developers (Requires Git)**
 
-If you have Git installed, here are the fastest one-liners to clone and launch immediately:
+**Important Note**: To get the advanced interactive hover player (with the mute button and scrubbing progress bar), you must run index.html via a local development server. Double clicking the file straight from your hard drive (`file:///`) blocks YouTube's advanced API, though a basic hover preview will still seamlessly work!
 
 #### Windows (PowerShell)
 
 ```powershell
-cd $env:USERPROFILE\Desktop; if (Test-Path YTTReborn) { git -C YTTReborn pull } else { git clone https://github.com/Jake-Fieldhouse/YTTReborn.git }; start YTTReborn\index.html
+cd $env:USERPROFILE\Desktop; Invoke-WebRequest -Uri "https://github.com/Jake-Fieldhouse/YTTReborn/archive/refs/heads/master.zip" -OutFile "YTTReborn.zip"; Expand-Archive -Path "YTTReborn.zip" -DestinationPath . -Force; start YTTReborn-master\index.html
 ```
 
 #### macOS
 
 ```bash
-cd ~/Desktop && if [ -d "YTTReborn" ]; then git -C YTTReborn pull; else git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; fi && open YTTReborn/index.html
+cd ~/Desktop && curl -LO https://github.com/Jake-Fieldhouse/YTTReborn/archive/refs/heads/master.zip && unzip -o master.zip && open YTTReborn-master/index.html
 ```
 
 #### Linux
 
 ```bash
-cd ~/Desktop && if [ -d "YTTReborn" ]; then git -C YTTReborn pull; else git clone https://github.com/Jake-Fieldhouse/YTTReborn.git; fi && xdg-open YTTReborn/index.html
+cd ~/Desktop && curl -LO https://github.com/Jake-Fieldhouse/YTTReborn/archive/refs/heads/master.zip && unzip -o master.zip && xdg-open YTTReborn-master/index.html
 ```
 
 ### 3. Paste Your Key
