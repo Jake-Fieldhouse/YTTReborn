@@ -340,7 +340,7 @@
           if (thumbWrap.querySelector('iframe')) return;
           const iframe = document.createElement('iframe');
           // Autoplay=1 starts it, mute=1 is required for autoplay to work, controls=0 hides UI
-          iframe.src = \`https://www.youtube.com/embed/\${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1\`;
+          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1`;
           iframe.allow = "autoplay; encrypted-media";
           thumbWrap.appendChild(iframe);
         }, 800);
