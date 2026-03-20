@@ -288,7 +288,7 @@
     }
 
     return `
-      <a href="${url}" target="_blank" rel="noopener" class="video-card${live ? ' video-card--live' : ''}" style="animation-delay: ${rank * 0.04}s" title="${title}">
+      <a href="${url}" target="_blank" rel="noopener" class="video-card${live ? ' video-card--live' : ''}" data-video-id="${video.id}" style="animation-delay: ${rank * 0.04}s" title="${title}">
         <div class="card-thumb">
           <img src="${thumb}" data-fallback-med="${thumbMed}" data-fallback-def="${thumbDef}" alt="${title}" loading="lazy" width="480" height="270">
           ${durationBadge}
@@ -323,6 +323,36 @@
       });
     });
   }
+  
+  // ─── Hover Preview Feature ───
+  let hoverTimer = null;
+  function attachHoverPreviews(container) {
+    container.querySelectorAll('.video-card').forEach(card => {
+      if (card.dataset.hoverAttached) return;
+      card.dataset.hoverAttached = '1';
+      
+      const thumbWrap = card.querySelector('.card-thumb');
+      const videoId = card.dataset.videoId;
+      
+      card.addEventListener('mouseenter', () => {
+        // Wait 800ms before spanning iframe to avoid aggressive loading when scrolling
+        hoverTimer = setTimeout(() => {
+          if (thumbWrap.querySelector('iframe')) return;
+          const iframe = document.createElement('iframe');
+          // Autoplay=1 starts it, mute=1 is required for autoplay to work, controls=0 hides UI
+          iframe.src = \`https://www.youtube.com/embed/\${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1\`;
+          iframe.allow = "autoplay; encrypted-media";
+          thumbWrap.appendChild(iframe);
+        }, 800);
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimer);
+        const iframe = thumbWrap.querySelector('iframe');
+        if (iframe) iframe.remove();
+      });
+    });
+  }
 
   function renderVideos(videos, append = false) {
     const html = videos.map(v => {
@@ -331,7 +361,9 @@
     }).join('');
     if (append) $grid.insertAdjacentHTML('beforeend', html);
     else        $grid.innerHTML = html;
+    
     attachThumbFallbacks($grid);
+    attachHoverPreviews($grid);
   }
 
   function updateTimestamp() {

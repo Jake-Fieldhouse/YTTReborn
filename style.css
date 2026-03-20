@@ -318,6 +318,31 @@ img { display: block; max-width: 100%; }
   object-fit: cover;
   transition: transform 0.4s var(--ease);
 }
+.card-thumb iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  pointer-events: none;
+  z-index: 5;
+  background: #000;
+  animation: fadeIn 0.4s var(--ease) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.card-thumb iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  pointer-events: none;
+  z-index: 5;
+  background: var(--bg-secondary);
+  animation: fadeUp 0.4s var(--ease) both;
+}
 .card-duration {
   position: absolute;
   bottom: 8px;
