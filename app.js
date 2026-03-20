@@ -39,6 +39,7 @@
   const $banner      = document.getElementById('status-banner');
   const $lastUpdated = document.getElementById('last-updated');
   const $modal       = document.getElementById('setup-modal');
+  const $modalClose  = document.getElementById('modal-close-btn');
   const $keyInput    = document.getElementById('api-key-input');
   const $keySubmit   = document.getElementById('api-key-submit');
   const $keyError    = document.getElementById('api-key-error');
@@ -64,10 +65,14 @@
     state.apiKey = '';
   }
 
-  function showModal() {
+  function showModal(isEdit = false) {
     $modal.classList.remove('hidden');
     $keyInput.value = '';
     $keyError.classList.add('hidden');
+    if ($modalClose) {
+      if (isEdit) $modalClose.classList.remove('hidden');
+      else $modalClose.classList.add('hidden');
+    }
     $keyInput.focus();
   }
 
@@ -357,7 +362,9 @@
           // YouTube's JS API breaks on file:// protocol. If YT is undefined, fallback to simple basic iframe.
           if (!window.YT || !window.YT.Player || window.location.protocol === 'file:') {
             const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1`;
+            // Use youtube-nocookie and explicit referrer policy to bypass YouTube Error 153 on local files
+            iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1`;
+            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
             iframe.allow = "autoplay; encrypted-media";
             playerWrap.appendChild(iframe);
             thumbWrap.appendChild(playerWrap);
@@ -385,6 +392,7 @@
           
           activePlayer = new window.YT.Player(playerDiv, {
             videoId: videoId,
+            host: 'https://www.youtube-nocookie.com',
             playerVars: { autoplay: 1, controls: 0, modestbranding: 1, disablekb: 1, fs: 0, playsinline: 1, rel: 0 },
             events: {
               onReady: (e) => {
@@ -580,9 +588,16 @@
   $keySubmit.addEventListener('click', handleKeySubmit);
   $keyInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleKeySubmit(); });
 
+  if ($modalClose) {
+    $modalClose.addEventListener('click', () => {
+      hideModal();
+      startAutoRefresh();
+    });
+  }
+
   $changeKey.addEventListener('click', () => {
     stopAutoRefresh();
-    showModal();
+    showModal(true);
   });
 
   async function handleKeySubmit() {
@@ -632,7 +647,7 @@
       hideModal();
       startApp();
     } else {
-      showModal();
+      showModal(false);
     }
   }
 
